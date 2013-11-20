@@ -1,4 +1,4 @@
-masked-input
+Masked input
 ============
 
 Masked input for android
