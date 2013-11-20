@@ -3,6 +3,8 @@ Masked input
 
 Masked input for Android
 
+![Sample App Screenshot](../master/screenshots/sample.png?raw=true)
+
 How to Use
 ----------
 
