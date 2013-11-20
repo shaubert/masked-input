@@ -2,6 +2,7 @@ package com.shaubert.masked.input;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.inputmethod.EditorInfo;
@@ -12,6 +13,10 @@ public class MaskedEditText extends EditTextWithoutComposing {
     private boolean maskedFormatterAttached;
     private boolean allowTextChange;
     private boolean innerCall;
+    private MaskCharsMap maskCharsMap;
+    private char maskCharReplacement = '_';
+
+    private boolean pendingMaskUpdate;
 
     public MaskedEditText(Context context) {
         super(context);
@@ -30,6 +35,8 @@ public class MaskedEditText extends EditTextWithoutComposing {
 
     private void init() {
         setImeOptions(getImeOptions() | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        setInputType(InputType.TYPE_CLASS_TEXT);
+        maskCharsMap = new MaskCharsMap(new NumericChar());
     }
 
     @Override
@@ -51,11 +58,49 @@ public class MaskedEditText extends EditTextWithoutComposing {
         }
     }
 
+    public void addMaskChar(MaskChar maskChar) {
+        maskCharsMap.add(maskChar);
+        refreshMask();
+    }
+
+    public void removeMaskChar(MaskChar maskChar) {
+        removeMaskChar(maskChar.getMaskChar());
+    }
+
+    public void removeMaskChar(char ch) {
+        if (maskCharsMap.remove(ch) != null) {
+            refreshMask();
+        }
+    }
+
+    public MaskChar[] getMaskChars() {
+        return maskCharsMap.getMaskChars();
+    }
+
+    public char getMaskCharReplacement() {
+        return maskCharReplacement;
+    }
+
+    public void setMaskCharReplacement(char maskCharReplacement) {
+        this.maskCharReplacement = maskCharReplacement;
+        refreshMask();
+    }
+
+    private void refreshMask() {
+        if (maskedFormatterAttached) {
+            setMask(maskedFormatter.getMask());
+        } else {
+            pendingMaskUpdate = true;
+        }
+    }
+
     public void setMask(String mask) {
         if (!TextUtils.isEmpty(mask)) {
+            pendingMaskUpdate = false;
+
             String oldVal = getTextFromMask();
             detachMaskedFormatter();
-            maskedFormatter = new MaskedInputFormatterTextWatcher();
+            maskedFormatter = new MaskedInputFormatterTextWatcher(maskCharsMap, maskCharReplacement);
             maskedFormatter.setMask(mask);
             setRawInputType(maskedFormatter.getInputType());
             safeSetText(maskedFormatter.getFormattedMask());
@@ -66,6 +111,13 @@ public class MaskedEditText extends EditTextWithoutComposing {
         } else {
             detachMaskedFormatter();
         }
+    }
+
+    public String getMask() {
+        if (maskedFormatterAttached) {
+            return maskedFormatter.getMask();
+        }
+        return null;
     }
 
     private void safeSetText(CharSequence text) {
@@ -83,6 +135,9 @@ public class MaskedEditText extends EditTextWithoutComposing {
     private void attachMaskedFormatter() {
         if (!maskedFormatterAttached && maskedFormatter != null) {
             maskedFormatterAttached = true;
+            if (pendingMaskUpdate) {
+                setMask(maskedFormatter.getMask());
+            }
             addTextChangedListener(maskedFormatter);
         }
     }

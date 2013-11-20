@@ -1,18 +1,12 @@
 package com.shaubert.masked.input;
 
 import android.text.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import android.view.inputmethod.EditorInfo;
 
 public class MaskedInputFormatterTextWatcher implements TextWatcher {
 
     public static final String TAG = MaskedInputFormatterTextWatcher.class.getSimpleName();
 
-    private static final MaskCharsMap MASK_CHARS_MAP = new MaskCharsMap(
-            new NumericChar()
-    );
-    private static final char MASK_CHAR_REPLACEMENT = '_';
 
     private boolean selfChange;
     private String mask;
@@ -25,6 +19,13 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
     private int selectionBeforeChange;
     private int editablePlacesBeforeCursor;
     private boolean deletionOfMultipleChars;
+    private final MaskCharsMap maskCharsMap;
+    private final char maskCharReplacement;
+
+    public MaskedInputFormatterTextWatcher(MaskCharsMap maskCharsMap, char maskCharReplacement) {
+        this.maskCharsMap = maskCharsMap;
+        this.maskCharReplacement = maskCharReplacement;
+    }
 
     public void setMask(String mask) {
         this.mask = mask;
@@ -36,7 +37,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
             lastInputEnd = -1;
             for (int i = 0; i < mask.length(); i++) {
                 char ch = mask.charAt(i);
-                maskCharsArr[i] = MASK_CHARS_MAP.getMaskChar(ch);
+                maskCharsArr[i] = maskCharsMap.getMaskChar(ch);
                 if (maskCharsArr[i] != null) {
                     if (firstInputStart == -1) {
                         firstInputStart = i;
@@ -45,6 +46,10 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
                 }
             }
         }
+    }
+
+    public String getMask() {
+        return mask;
     }
 
     public boolean isSelfChange() {
@@ -57,20 +62,38 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         }
 
         boolean hasText = false;
-        boolean hasNumbers = false;
+        boolean hasDateTime = false;
+        boolean hasNumber = false;
+        boolean hasPhone = false;
         for (MaskChar maskChar : maskCharsArr) {
             if (maskChar != null) {
-                if (maskChar instanceof NumericChar) {
-                    hasNumbers = true;
+                int maskCharInputType = maskChar.getInputTypeClass();
+                final int cls = maskCharInputType & EditorInfo.TYPE_MASK_CLASS;
+                if (cls == EditorInfo.TYPE_CLASS_TEXT) {
+                    hasText = true;
+                } else if (cls == EditorInfo.TYPE_CLASS_NUMBER) {
+                    hasNumber = true;
+                } else if (cls == EditorInfo.TYPE_CLASS_DATETIME) {
+                    hasDateTime = true;
+                } else if (cls == EditorInfo.TYPE_CLASS_PHONE) {
+                    hasPhone = true;
+                } else {
+                    hasText = true;
                 }
             }
         }
+
         if (hasText) {
             return InputType.TYPE_CLASS_TEXT;
-        } else if (hasNumbers) {
+        } else if (hasDateTime) {
+            return InputType.TYPE_CLASS_DATETIME;
+        } else if (hasPhone) {
+            return InputType.TYPE_CLASS_PHONE;
+        } else if (hasNumber) {
             return InputType.TYPE_CLASS_NUMBER;
+        } else {
+            return InputType.TYPE_CLASS_TEXT;
         }
-        return InputType.TYPE_CLASS_TEXT;
     }
 
     public SpannableStringBuilder getFormattedMask() {
@@ -81,10 +104,10 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         int inputGroupStart = 0;
         for (int i = 0; i < mask.length(); i++) {
             char ch = mask.charAt(i);
-            boolean prevMaskChar = i > 0 && builder.charAt(i - 1) == MASK_CHAR_REPLACEMENT;
+            boolean prevMaskChar = i > 0 && builder.charAt(i - 1) == maskCharReplacement;
             MaskChar maskChar = maskCharsArr[i];
             if (maskChar != null) {
-                builder.append(MASK_CHAR_REPLACEMENT);
+                builder.append(maskCharReplacement);
                 if (!prevMaskChar) {
                     inputGroupStart = i;
                 }
@@ -172,7 +195,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         int newSelectionStart = -1;
         for (int i = 0; i < newText.length() && counter < unmaskedValue.length(); i++) {
             char source = newText.charAt(i);
-            if (source == MASK_CHAR_REPLACEMENT) {
+            if (source == maskCharReplacement) {
                 if (newSelectionStart == -1) {
                     newSelectionStart = i;
                 }
@@ -181,7 +204,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
                     if (editablePlacesBeforeCursor == 0) {
                         if (newCharsCount != 1
                                 || counter == 0
-                                || unmaskedValue.charAt(counter - 1) != MASK_CHAR_REPLACEMENT) {
+                                || unmaskedValue.charAt(counter - 1) != maskCharReplacement) {
                             newSelectionStart = i;
                         }
                     } else {
@@ -262,10 +285,10 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
                 } else {
                     if (groupText.length() < group.length) {
                         while (groupText.length() < group.length) {
-                            groupText.insert(newCharsLocalPos, MASK_CHAR_REPLACEMENT);
+                            groupText.insert(newCharsLocalPos, maskCharReplacement);
                         }
                     } else if (newCharsStart == end && !deletionOfMultipleChars) {
-                        groupText.replace(newCharsLocalPos - 1, newCharsLocalPos, String.valueOf(MASK_CHAR_REPLACEMENT));
+                        groupText.replace(newCharsLocalPos - 1, newCharsLocalPos, String.valueOf(maskCharReplacement));
                     }
                 }
                 newCharsWasHandled = true;
@@ -275,12 +298,12 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
                     int nextStart = nextGroup != null ? editable.getSpanStart(nextGroup) : 0;
                     int nextEnd = nextGroup != null ? editable.getSpanEnd(nextGroup) : 0;
                     if (nextGroup == null || (nextStart == newCharsStart && nextEnd - nextStart == nextGroup.length)) {
-                        groupText.replace(group.length - 1, group.length, String.valueOf(MASK_CHAR_REPLACEMENT));
+                        groupText.replace(group.length - 1, group.length, String.valueOf(maskCharReplacement));
                     }
                 }
             }
             while (groupText.length() < group.length) {
-                groupText.insert(groupText.length(), MASK_CHAR_REPLACEMENT);
+                groupText.insert(groupText.length(), maskCharReplacement);
             }
             lastGroupEnd = end;
             result.append(groupText);
@@ -329,7 +352,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         for (int i = 0; i < min; i++) {
             char ch = s.charAt(i);
             if (ch != mask.charAt(i)) {
-                if (ch != MASK_CHAR_REPLACEMENT) {
+                if (ch != maskCharReplacement) {
                     lastValuePos = i + 1;
                     moveToNextReplChar = true;
                 } else {
@@ -382,7 +405,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         int min = Math.min(s.length(), mask.length());
         for (int i = 0; i < min; i++) {
             char ch = s.charAt(i);
-            if (ch != mask.charAt(i) && ch != MASK_CHAR_REPLACEMENT) {
+            if (ch != mask.charAt(i) && ch != maskCharReplacement) {
                 builder.append(ch);
             }
         }
@@ -402,7 +425,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         int counter = 0;
         for (int i = 0; i < newText.length() && counter < value.length(); i++) {
             char source = newText.charAt(i);
-            if (source == MASK_CHAR_REPLACEMENT) {
+            if (source == maskCharReplacement) {
                 newText.replace(i, i + 1, value, counter, counter + 1);
                 counter++;
             }
@@ -444,42 +467,6 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         private InputGroup(int length, MaskChar[] maskChars) {
             this.length = length;
             this.maskChars = maskChars;
-        }
-    }
-
-    private interface MaskChar {
-        char getMaskChar();
-
-        boolean isValid(char replacement);
-    }
-
-    private static class MaskCharsMap {
-        private Map<Character, MaskChar> maskCharMap = new HashMap<Character, MaskChar>();
-
-        private MaskCharsMap(MaskChar... maskChars) {
-            for (MaskChar maskChar : maskChars) {
-                maskCharMap.put(maskChar.getMaskChar(), maskChar);
-            }
-        }
-
-        public boolean isMaskChar(char ch) {
-            return maskCharMap.containsKey(ch);
-        }
-
-        public MaskChar getMaskChar(char ch) {
-            return maskCharMap.get(ch);
-        }
-    }
-
-    private static class NumericChar implements MaskChar {
-        @Override
-        public char getMaskChar() {
-            return '#';
-        }
-
-        @Override
-        public boolean isValid(char replacement) {
-            return Character.isDigit(replacement);
         }
     }
 

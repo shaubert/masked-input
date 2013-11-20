@@ -22,7 +22,6 @@
             <artifactId>masked-input</artifactId>
             <groupId>com.shaubert.masked.input</groupId>
             <version>${project.version}</version>
-            <type>apklib</type>
         </dependency>
 
         <dependency>

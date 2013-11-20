@@ -15,18 +15,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Input mask:"/>
+            android:text="@string/input_mask"/>
 
         <EditText
             android:id="@+id/mask_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="+7 ### ###-##-##"/>
+            android:inputType="text"
+            android:text="@string/default_mask"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="# - for numeric character"
+            android:text="@string/mask_chars_description"
             android:textStyle="italic"/>
 
         <Button
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"
-            android:text="Sumbit"/>
+            android:text="@string/submit"/>
 
         <com.shaubert.masked.input.MaskedEditText
             android:id="@+id/masked_input"
