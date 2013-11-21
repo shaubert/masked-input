@@ -29,3 +29,4 @@ proguard/
 .idea/
 sample/target/*
 library/target/*
+target/*
