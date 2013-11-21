@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>Masked Input (Parent)</name>
+    <description>Masked Input Library for Android (Parent)</description>
+    <url>https://github.com/shaubert/masked-input</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <inceptionYear>2013</inceptionYear>
 
@@ -11,7 +20,7 @@
         <url>https://github.com/shaubert/masked-input</url>
         <connection>scm:git:git://github.com/shaubert/masked-input.git</connection>
         <developerConnection>scm:git:git@github.com:shaubert/masked-input.git</developerConnection>
-    </scm>
+  </scm>
 
     <groupId>com.shaubert.maskedinput</groupId>
     <artifactId>masked-input-parent</artifactId>
@@ -27,6 +36,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <repo.id>git.shaubert.repo</repo.id>
+        <repo.url>file://W:/home/maven-repo</repo.url>
+
         <android.version>4.1.1.4</android.version>
         <android.platform>16</android.platform>
     </properties>
@@ -41,6 +53,17 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>${repo.id}</id>
+            <url>${repo.url}/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>${repo.id}-snapshots</id>
+            <url>${repo.url}/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -64,6 +87,24 @@
                     </sdk>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                    <goals>deploy</goals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
