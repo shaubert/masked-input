@@ -1,4 +1,4 @@
-package com.shaubert.masked.input;
+package com.shaubert.maskedinput;
 
 import java.util.Collection;
 import java.util.HashMap;

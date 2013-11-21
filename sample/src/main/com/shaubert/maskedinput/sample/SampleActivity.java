@@ -1,12 +1,12 @@
-package com.shaubert.masked.input.sample;
+package com.shaubert.maskedinput.sample;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import com.shaubert.masked.input.MaskedEditText;
-import com.shaubert.masked.input.TextChar;
+import com.shaubert.maskedinput.MaskedEditText;
+import com.shaubert.maskedinput.TextChar;
 
 public class SampleActivity extends Activity {
 

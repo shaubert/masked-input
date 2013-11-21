@@ -1,4 +1,4 @@
-package com.shaubert.masked.input;
+package com.shaubert.maskedinput;
 
 public interface MaskChar {
     char getMaskChar();

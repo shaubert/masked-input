@@ -6,7 +6,7 @@
     <name>Masked Input (Sample)</name>
 
     <parent>
-        <groupId>com.shaubert.masked.input</groupId>
+        <groupId>com.shaubert.maskedinput</groupId>
         <artifactId>masked-input-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -20,13 +20,13 @@
     <dependencies>
         <dependency>
             <artifactId>masked-input</artifactId>
-            <groupId>com.shaubert.masked.input</groupId>
+            <groupId>com.shaubert.maskedinput</groupId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
+            <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <groupId>android</groupId>
         </dependency>
     </dependencies>
 

@@ -10,7 +10,7 @@ How to Use
 
 Add MaskedEditText to your layout
 
-    <com.shaubert.masked.input.MaskedEditText
+    <com.shaubert.maskedinput.MaskedEditText
         android:id="@+id/masked_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

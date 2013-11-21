@@ -1,4 +1,4 @@
-package com.shaubert.masked.input;
+package com.shaubert.maskedinput;
 
 import android.text.*;
 import android.view.inputmethod.EditorInfo;

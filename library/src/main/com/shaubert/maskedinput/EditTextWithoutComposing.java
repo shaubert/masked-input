@@ -1,4 +1,4 @@
-package com.shaubert.masked.input;
+package com.shaubert.maskedinput;
 
 import android.content.Context;
 import android.util.AttributeSet;
