@@ -86,6 +86,9 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         if (hasText) {
             return InputType.TYPE_CLASS_TEXT;
         } else if (hasDateTime) {
+            if (hasPhone) {
+                return InputType.TYPE_CLASS_TEXT;
+            }
             return InputType.TYPE_CLASS_DATETIME;
         } else if (hasPhone) {
             return InputType.TYPE_CLASS_PHONE;
