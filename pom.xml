@@ -4,6 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Masked Input (Parent)</name>
+    <description>Masked Input Library for Android (Parent)</description>
+    <url>https://github.com/shaubert/masked-input</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <inceptionYear>2013</inceptionYear>
 
@@ -27,6 +37,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <repo.id>shaubert.repo</repo.id>
+        <repo.url>file://W:/home/maven-repo</repo.url>
+
         <android.version>4.1.1.4</android.version>
         <android.platform>16</android.platform>
     </properties>
@@ -41,6 +54,17 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>git.shaubert.repo</id>
+            <url>https://github.com/shaubert/maven-repo/raw/master/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>git.shaubert.repo-snapshots</id>
+            <url>https://github.com/shaubert/maven-repo/raw/master/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -64,6 +88,24 @@
                     </sdk>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                    <goals>deploy</goals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
