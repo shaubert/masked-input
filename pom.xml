@@ -20,12 +20,12 @@
         <url>https://github.com/shaubert/masked-input</url>
         <connection>scm:git:git://github.com/shaubert/masked-input.git</connection>
         <developerConnection>scm:git:git@github.com:shaubert/masked-input.git</developerConnection>
-      <tag>masked-input-parent-1.0.2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <groupId>com.shaubert.maskedinput</groupId>
     <artifactId>masked-input-parent</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 

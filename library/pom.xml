@@ -17,13 +17,13 @@
     <parent>
       <groupId>com.shaubert.maskedinput</groupId>
       <artifactId>masked-input-parent</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
     </parent>
 
 
     <artifactId>masked-input</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
