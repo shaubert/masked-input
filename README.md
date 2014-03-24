@@ -59,7 +59,7 @@ Add dependency to your pom file:
     <dependency>
         <groupId>com.shaubert.maskedinput</groupId>
         <artifactId>masked-input</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 
 and repository:
