@@ -50,3 +50,23 @@ You can add custom `MaskChar` implementations with `MaskedEditText.addMaskChar()
 
 Also you could change the default mask character replacement (`'_'`) with 
 `MaskedEditText.setMaskCharReplacement()` method. But remember, user is unable to input replacement char.
+
+How to add to your project
+--------------------------
+
+Add dependency to your pom file:
+
+    <dependency>
+        <groupId>com.shaubert.maskedinput</groupId>
+        <artifactId>masked-input</artifactId>
+        <version>1.0.1</version>
+    </dependency>
+
+and repository:
+
+    <repositories>
+        <repository>
+            <id>git.shaubert.repo</id>
+            <url>https://github.com/shaubert/maven-repo/raw/master/releases</url>
+        </repository>
+    </repositories>
