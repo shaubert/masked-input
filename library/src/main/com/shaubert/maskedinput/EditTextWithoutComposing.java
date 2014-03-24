@@ -2,9 +2,7 @@ package com.shaubert.maskedinput;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputConnectionWrapper;
+import android.view.inputmethod.*;
 import android.widget.EditText;
 
 public class EditTextWithoutComposing extends EditText {
@@ -22,7 +20,12 @@ public class EditTextWithoutComposing extends EditText {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return new CustomInputConnection(super.onCreateInputConnection(outAttrs), false);
+        InputConnection target = super.onCreateInputConnection(outAttrs);
+        if (target != null) {
+            return new CustomInputConnection(target, false);
+        } else {
+            return null;
+        }
     }
 
     private static class CustomInputConnection extends InputConnectionWrapper {
@@ -32,13 +35,23 @@ public class EditTextWithoutComposing extends EditText {
         }
 
         @Override
-        public CharSequence getTextAfterCursor(int n, int flags) {
-            return null;
+        public boolean setComposingRegion(int start, int end) {
+            return false;
         }
 
         @Override
-        public CharSequence getTextBeforeCursor(int n, int flags) {
-            return null;
+        public boolean setComposingText(CharSequence text, int newCursorPosition) {
+            return false;
+        }
+
+        @Override
+        public boolean commitCompletion(CompletionInfo text) {
+            return false;
+        }
+
+        @Override
+        public boolean commitCorrection(CorrectionInfo correctionInfo) {
+            return false;
         }
     }
 }
