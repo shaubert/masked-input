@@ -17,12 +17,12 @@
     <parent>
         <groupId>com.shaubert.maskedinput</groupId>
         <artifactId>masked-input-parent</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>masked-input-sample</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
 
     <packaging>apk</packaging>
 
