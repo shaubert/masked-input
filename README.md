@@ -13,9 +13,10 @@ Add MaskedEditText to your layout
     <com.shaubert.maskedinput.MaskedEditText
         android:id="@+id/masked_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:mi_mask="+7 ### ##-##-##"/>
         
-Set the mask
+Set the mask in code
 
     maskedEditText = (MaskedEditText) findViewById(R.id.masked_input);
     maskedEditText.setMask("+7 ### ##-##-##");
@@ -29,7 +30,7 @@ You need to implement `MaskChar` interface. For example lets look at `NumericCha
             return '#';
         }
         
-       @Override
+        @Override
         public boolean isValid(char replacement) {
             return Character.isDigit(replacement);
         }
@@ -38,6 +39,9 @@ You need to implement `MaskChar` interface. For example lets look at `NumericCha
         public int getInputTypeClass() {
             return InputType.TYPE_CLASS_NUMBER;
         }
+        
+        ...
+        
     }
     
 From `getInputTypeClass` you can return only one of:
@@ -46,27 +50,43 @@ From `getInputTypeClass` you can return only one of:
 * `InputType.TYPE_CLASS_NUMBER`
 * `InputType.TYPE_CLASS_DATETIME`
 
-You can add custom `MaskChar` implementations with `MaskedEditText.addMaskChar()` call.
+Also you are able to define custom spans for placeholder and for entered value in mask with
+
+    @Override
+    public Object getSpanForPlaceholder() {
+        if (maskColor != null) {
+            return new ForegroundColorSpan(maskColor);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Object getSpanForValue() {
+        if (valueColor != null) {
+            return new ForegroundColorSpan(valueColor);
+        }
+
+        return null;
+    }
+
+You can pass custom `MaskChar` implementations to `MasMaskedEditText` with `addMaskChar()` call.
 
 Also you could change the default mask character replacement (`'_'`) with 
 `MaskedEditText.setMaskCharReplacement()` method. But remember, user is unable to input replacement char.
+
+List of supported xml attributes:
+* `mi_mask`, format="string|reference" — mask (for example "####-####-####-####")
+* `mi_placeholder`, format="string|reference" — placeholder (for example "X")
 
 How to add to your project
 --------------------------
 
 Add dependency to your pom file:
 
-    <dependency>
-        <groupId>com.shaubert.maskedinput</groupId>
-        <artifactId>masked-input</artifactId>
-        <version>1.0.2</version>
-    </dependency>
-
-and repository:
-
-    <repositories>
-        <repository>
-            <id>git.shaubert.repo</id>
-            <url>https://github.com/shaubert/maven-repo/raw/master/releases</url>
-        </repository>
-    </repositories>
+    repositories {
+        maven{url "https://github.com/shaubert/maven-repo/raw/master/releases"}
+    }
+    dependencies {
+        compile 'com.shaubert.maskedinput:library:1.1'
+    }

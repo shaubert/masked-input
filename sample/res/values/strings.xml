@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mask_chars_description"># - for numeric character\n* - for letters</string>
-    <string name="default_mask">+7 ### ###-##-##</string>
-    <string name="input_mask">Input mask:</string>
-    <string name="submit">Submit</string>
-    <string name="app_name">Masked Input Sample</string>
-</resources>

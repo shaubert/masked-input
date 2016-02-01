@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MaskedEditTextStyle">
+        <attr name="mi_mask" format="string|reference"/>
+        <attr name="mi_placeholder" format="string|reference"/>
+    </declare-styleable>
+
+</resources>
