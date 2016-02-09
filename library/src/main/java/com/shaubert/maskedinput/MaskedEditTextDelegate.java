@@ -11,9 +11,13 @@ import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 public class MaskedEditTextDelegate implements MaskedInputView {
 
     private EditText editText;
+
+    private WeakReference<InputConnectionWithoutComposing> inputConnectionRef;
 
     private MaskedInputFormatterTextWatcher maskedFormatter;
     private boolean maskedFormatterAttached;
@@ -21,6 +25,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     private boolean innerCall;
     private MaskCharsMap maskCharsMap;
     private char placeholder = '_';
+    private int initialInputType;
 
     private boolean pendingMaskUpdate;
 
@@ -35,6 +40,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
 
     private void init(AttributeSet attrs) {
         editText.setImeOptions(editText.getImeOptions() | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        initialInputType = editText.getInputType();
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         maskCharsMap = new MaskCharsMap(
                 new NumericChar(getContext()),
@@ -149,6 +155,15 @@ public class MaskedEditTextDelegate implements MaskedInputView {
         if (maskedFormatterAttached) {
             maskedFormatterAttached = false;
             removeTextChangedListener(maskedFormatter);
+            setComposingEnabled(true);
+            setRawInputType(initialInputType);
+        }
+    }
+
+    private void setComposingEnabled(boolean enabled) {
+        InputConnectionWithoutComposing connection = inputConnectionRef != null ? inputConnectionRef.get() : null;
+        if (connection != null) {
+            connection.setComposingEnabled(enabled);
         }
     }
 
@@ -159,6 +174,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
                 setMask(maskedFormatter.getMask());
             }
             addTextChangedListener(maskedFormatter);
+            setComposingEnabled(false);
         }
     }
 
@@ -216,8 +232,12 @@ public class MaskedEditTextDelegate implements MaskedInputView {
 
     public InputConnection dispatchOnCreateInputConnection(InputConnection result) {
         if (result != null) {
-            return new InputConnectionWithoutComposing(result, false);
+            InputConnectionWithoutComposing inputConnectionWithoutComposing = new InputConnectionWithoutComposing(result, false);
+            inputConnectionWithoutComposing.setComposingEnabled(!maskedFormatterAttached);
+            inputConnectionRef = new WeakReference<>(inputConnectionWithoutComposing);
+            return inputConnectionWithoutComposing;
         } else {
+            inputConnectionRef = null;
             return null;
         }
     }
