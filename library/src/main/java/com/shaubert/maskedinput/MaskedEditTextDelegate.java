@@ -186,7 +186,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
             throw new IllegalStateException("setting text disabled when using mask, use setTextInMask instead");
         }
         allowTextChangeOnce = false;
-        return true;
+        return false;
     }
 
     public boolean isMaskFilled() {
