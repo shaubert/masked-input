@@ -36,6 +36,9 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
             lastInputEnd = -1;
             for (int i = 0; i < mask.length(); i++) {
                 char ch = mask.charAt(i);
+                if (ch == placeholder) {
+                    throw new IllegalArgumentException("mask must not contain placeholder character '" + placeholder + "'");
+                }
                 maskCharsArr[i] = maskCharsMap.getMaskChar(ch);
                 if (maskCharsArr[i] != null) {
                     if (firstInputStart == -1) {
@@ -119,7 +122,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
                 }
             } else {
                 builder.append(ch);
-                if (prevMaskChar) {
+                if (prevMaskChar && inputGroupStart >= 0) {
                     MaskChar[] masks = new MaskChar[i - inputGroupStart];
                     System.arraycopy(maskCharsArr, inputGroupStart, masks, 0, masks.length);
                     builder.setSpan(new InputGroup(masks.length, masks), inputGroupStart, i, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
