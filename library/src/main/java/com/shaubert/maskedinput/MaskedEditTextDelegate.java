@@ -11,7 +11,7 @@ import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MaskedEditTextDelegate {
+public class MaskedEditTextDelegate implements MaskedInputView {
 
     private EditText editText;
 
@@ -249,4 +249,5 @@ public class MaskedEditTextDelegate {
     private void setRawInputType(int inputType) {
         editText.setRawInputType(inputType);
     }
+
 }

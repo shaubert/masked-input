@@ -8,8 +8,9 @@ import android.view.inputmethod.InputConnection;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.shaubert.maskedinput.MaskChar;
 import com.shaubert.maskedinput.MaskedEditTextDelegate;
+import com.shaubert.maskedinput.MaskedInputView;
 
-public class MaskedMETEditText extends MaterialEditText {
+public class MaskedMETEditText extends MaterialEditText implements MaskedInputView {
 
     private MaskedEditTextDelegate delegate;
 
@@ -58,54 +59,67 @@ public class MaskedMETEditText extends MaterialEditText {
         return delegate.dispatchOnCreateInputConnection(super.onCreateInputConnection(outAttrs));
     }
 
+    @Override
     public void addMaskChar(MaskChar... maskChars) {
         delegate.addMaskChar(maskChars);
     }
 
+    @Override
     public void clearMaskChars() {
         delegate.clearMaskChars();
     }
 
+    @Override
     public void removeMaskChar(MaskChar maskChar) {
         delegate.removeMaskChar(maskChar);
     }
 
+    @Override
     public void removeMaskChar(char ch) {
         delegate.removeMaskChar(ch);
     }
 
+    @Override
     public MaskChar[] getMaskChars() {
         return delegate.getMaskChars();
     }
 
+    @Override
     public char getPlaceholder() {
         return delegate.getPlaceholder();
     }
 
+    @Override
     public void setPlaceholder(char placeholder) {
         delegate.setPlaceholder(placeholder);
     }
 
+    @Override
     public void setMask(String mask) {
         delegate.setMask(mask);
     }
 
+    @Override
     public String getMask() {
         return delegate.getMask();
     }
 
+    @Override
     public String getTextFromMask() {
         return delegate.getTextFromMask();
     }
 
+    @Override
     public void setTextInMask(String text) {
         delegate.setTextInMask(text);
     }
 
+    @Override
     public boolean isMaskFilled() {
         return delegate.isMaskFilled();
     }
 
+    @Override
     public int getMaskedCharsCount() {
         return delegate.getMaskedCharsCount();
     }

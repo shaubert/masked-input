@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
-public class MaskedEditText extends AppCompatEditText {
+public class MaskedEditText extends AppCompatEditText implements MaskedInputView {
 
     private MaskedEditTextDelegate delegate;
 
@@ -56,54 +56,67 @@ public class MaskedEditText extends AppCompatEditText {
         return delegate.dispatchOnCreateInputConnection(super.onCreateInputConnection(outAttrs));
     }
 
-    public void addMaskChar(MaskChar ... maskChars) {
+    @Override
+    public void addMaskChar(MaskChar... maskChars) {
         delegate.addMaskChar(maskChars);
     }
 
+    @Override
     public void clearMaskChars() {
         delegate.clearMaskChars();
     }
 
+    @Override
     public void removeMaskChar(MaskChar maskChar) {
         delegate.removeMaskChar(maskChar);
     }
 
+    @Override
     public void removeMaskChar(char ch) {
         delegate.removeMaskChar(ch);
     }
 
+    @Override
     public MaskChar[] getMaskChars() {
         return delegate.getMaskChars();
     }
 
+    @Override
     public char getPlaceholder() {
         return delegate.getPlaceholder();
     }
 
+    @Override
     public void setPlaceholder(char placeholder) {
         delegate.setPlaceholder(placeholder);
     }
 
+    @Override
     public void setMask(String mask) {
         delegate.setMask(mask);
     }
 
+    @Override
     public String getMask() {
         return delegate.getMask();
     }
 
+    @Override
     public String getTextFromMask() {
         return delegate.getTextFromMask();
     }
 
+    @Override
     public void setTextInMask(String text) {
         delegate.setTextInMask(text);
     }
 
+    @Override
     public boolean isMaskFilled() {
         return delegate.isMaskFilled();
     }
 
+    @Override
     public int getMaskedCharsCount() {
         return delegate.getMaskedCharsCount();
     }
