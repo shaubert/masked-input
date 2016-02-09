@@ -6,11 +6,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import com.shaubert.maskedinput.MaskedEditText;
+import com.shaubert.maskedinput.metextension.MaskedMETEditText;
 
 public class SampleActivity extends Activity {
 
     private EditText mask;
     private MaskedEditText maskedEditText;
+    private MaskedMETEditText maskedMETEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +21,12 @@ public class SampleActivity extends Activity {
 
         mask = (EditText) findViewById(R.id.mask_input);
         maskedEditText = (MaskedEditText) findViewById(R.id.masked_input);
+        maskedMETEditText = (MaskedMETEditText) findViewById(R.id.masked_met_input);
         if (savedInstanceState != null) {
             String mask = savedInstanceState.getString("mask");
             if (!TextUtils.isEmpty(mask)) {
                 maskedEditText.setMask(mask);
+                maskedMETEditText.setMask(mask);
             }
         }
 
@@ -36,6 +40,7 @@ public class SampleActivity extends Activity {
 
     private void submitMask() {
         maskedEditText.setMask(mask.getText().toString());
+        maskedMETEditText.setMask(mask.getText().toString());
     }
 
     @Override

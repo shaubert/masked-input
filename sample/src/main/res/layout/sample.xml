@@ -47,5 +47,13 @@
             app:mi_mask="@string/default_mask"
             />
 
+        <com.shaubert.maskedinput.metextension.MaskedMETEditText
+            android:id="@+id/masked_met_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:mi_mask="@string/default_mask"
+            />
+
     </LinearLayout>
 </ScrollView>
