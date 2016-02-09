@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    provided project(':library')
+    compile project(':library')
 }
 
 android {
