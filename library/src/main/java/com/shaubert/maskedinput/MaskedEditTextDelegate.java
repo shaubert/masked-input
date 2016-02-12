@@ -120,10 +120,13 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     }
 
     public void setMask(String mask) {
+        String oldVal = getText().toString();
+        if (maskedFormatterAttached) {
+            oldVal = getTextFromMask();
+        }
+
         if (!TextUtils.isEmpty(mask)) {
             pendingMaskUpdate = false;
-
-            String oldVal = getTextFromMask();
             detachMaskedFormatter();
             maskedFormatter = new MaskedInputFormatterTextWatcher(maskCharsMap, placeholder);
             maskedFormatter.setMask(mask);
@@ -138,6 +141,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
             dispatchOnSelectionChanged(selectionPosition, selectionPosition);
         } else {
             detachMaskedFormatter();
+            safeSetText(oldVal);
         }
     }
 
