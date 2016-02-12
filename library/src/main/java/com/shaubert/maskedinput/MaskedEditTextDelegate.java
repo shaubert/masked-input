@@ -22,7 +22,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     private MaskedInputFormatterTextWatcher maskedFormatter;
     private boolean maskedFormatterAttached;
     private boolean allowTextChangeOnce;
-    private boolean innerCall;
+    private boolean innerSelectionCall;
     private MaskCharsMap maskCharsMap;
     private char placeholder = '_';
     private int initialInputType;
@@ -58,17 +58,17 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     }
 
     public boolean dispatchOnSelectionChanged(int selStart, int selEnd) {
-        if (maskedFormatterAttached && !innerCall && !maskedFormatter.isSelfChange()) {
+        if (maskedFormatterAttached && !innerSelectionCall && !maskedFormatter.isSelfChange()) {
             if (selStart == selEnd) {
                 int end = maskedFormatter.getLastAllowedSelectionPosition(getText());
-                if (selStart > end) {
+                if (selStart >= end) {
                     selEnd = selStart = end;
                 } else {
-                    selEnd = selStart = maskedFormatter.getNextSelectionPosition(selStart);
+                    selEnd = selStart = Math.min(end, maskedFormatter.getNextSelectionPosition(selStart));
                 }
-                innerCall = true;
+                innerSelectionCall = true;
                 setSelection(selStart, selEnd);
-                innerCall = false;
+                innerSelectionCall = false;
             }
             return true;
         } else {
@@ -129,10 +129,13 @@ public class MaskedEditTextDelegate implements MaskedInputView {
             maskedFormatter.setMask(mask);
             setRawInputType(maskedFormatter.getInputType());
             safeSetText(maskedFormatter.getFormattedMask());
-            attachMaskedFormatter();
             if (!TextUtils.isEmpty(oldVal)) {
-                setTextInMask(oldVal);
+                safeSetText(maskedFormatter.getFormattedValue(oldVal));
             }
+            attachMaskedFormatter();
+
+            int selectionPosition = maskedFormatter.getLastAllowedSelectionPosition(getText());
+            dispatchOnSelectionChanged(selectionPosition, selectionPosition);
         } else {
             detachMaskedFormatter();
         }
@@ -149,7 +152,6 @@ public class MaskedEditTextDelegate implements MaskedInputView {
         allowTextChangeOnce = true;
         setText(text);
     }
-
 
     private void detachMaskedFormatter() {
         if (maskedFormatterAttached) {

@@ -224,19 +224,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
                 newText.replace(i, i + 1, String.valueOf(value));
                 MaskChar maskChar = maskCharsArr[i];
                 if (maskChar != null && value != placeholder) {
-                    Object spanForPlaceholder = maskChar.getSpanForPlaceholder();
-                    if (spanForPlaceholder != null) {
-                        Object[] spans = newText.getSpans(i, i + 1, spanForPlaceholder.getClass());
-                        if (spans != null) {
-                            for (Object span : spans) {
-                                newText.removeSpan(span);
-                            }
-                        }
-                    }
-                    Object spanForValue = maskChar.getSpanForValue();
-                    if (spanForValue != null) {
-                        newText.setSpan(spanForValue, i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
+                    setValueSpanInMask(newText, i, maskChar);
                 }
                 counter++;
 
@@ -260,6 +248,22 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         editable.replace(0, editable.length(), newText, 0, newText.length());
         Selection.setSelection(editable, newSelectionStart);
         selfChange = false;
+    }
+
+    private void setValueSpanInMask(SpannableStringBuilder formattedMaskText, int position, MaskChar maskChar) {
+        Object spanForPlaceholder = maskChar.getSpanForPlaceholder();
+        if (spanForPlaceholder != null) {
+            Object[] spans = formattedMaskText.getSpans(position, position + 1, spanForPlaceholder.getClass());
+            if (spans != null) {
+                for (Object span : spans) {
+                    formattedMaskText.removeSpan(span);
+                }
+            }
+        }
+        Object spanForValue = maskChar.getSpanForValue();
+        if (spanForValue != null) {
+            formattedMaskText.setSpan(spanForValue, position, position + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
     }
 
     private String getUnmaskedValueAfterInput(Editable editable) {
@@ -449,9 +453,10 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
         SpannableStringBuilder newText = getFormattedMask();
         int counter = 0;
         for (int i = 0; i < newText.length() && counter < value.length(); i++) {
-            char source = newText.charAt(i);
-            if (source == placeholder) {
+            MaskChar maskChar = maskCharsArr[i];
+            if (maskChar != null) {
                 newText.replace(i, i + 1, value, counter, counter + 1);
+                setValueSpanInMask(newText, i, maskChar);
                 counter++;
             }
         }
