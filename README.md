@@ -88,5 +88,5 @@ Add dependency to your pom file:
         maven{url "https://github.com/shaubert/maven-repo/raw/master/releases"}
     }
     dependencies {
-        compile 'com.shaubert.maskedinput:library:1.2.6'
+        compile 'com.shaubert.maskedinput:library:1.2.7'
     }
