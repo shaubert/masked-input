@@ -202,6 +202,9 @@ public class MaskedEditTextDelegate implements MaskedInputView {
             detachMaskedFormatter(false);
             safeSetText(maskedFormatter.getFormattedValue(text));
             attachMaskedFormatter();
+
+            int selectionPosition = maskedFormatter.getLastAllowedSelectionPosition(getText());
+            dispatchOnSelectionChanged(selectionPosition, selectionPosition);
         }
     }
 
