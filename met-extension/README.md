@@ -30,5 +30,5 @@ Add dependency to your pom file:
         maven{url "https://github.com/shaubert/maven-repo/raw/master/releases"}
     }
     dependencies {
-        compile 'com.shaubert.maskedinput:met-extension:1.2.4'
+        compile 'com.shaubert.maskedinput:met-extension:1.2.5'
     }
