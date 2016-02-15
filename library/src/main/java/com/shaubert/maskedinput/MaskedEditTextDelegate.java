@@ -127,7 +127,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
 
         if (!TextUtils.isEmpty(mask)) {
             pendingMaskUpdate = false;
-            detachMaskedFormatter();
+            detachMaskedFormatter(false);
             maskedFormatter = new MaskedInputFormatterTextWatcher(maskCharsMap, placeholder);
             maskedFormatter.setMask(mask);
             setRawInputType(maskedFormatter.getInputType() | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -140,7 +140,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
             int selectionPosition = maskedFormatter.getLastAllowedSelectionPosition(getText());
             dispatchOnSelectionChanged(selectionPosition, selectionPosition);
         } else {
-            detachMaskedFormatter();
+            detachMaskedFormatter(true);
             safeSetText(oldVal);
         }
     }
@@ -157,12 +157,14 @@ public class MaskedEditTextDelegate implements MaskedInputView {
         setText(text);
     }
 
-    private void detachMaskedFormatter() {
+    private void detachMaskedFormatter(boolean restoreInputType) {
         if (maskedFormatterAttached) {
             maskedFormatterAttached = false;
             removeTextChangedListener(maskedFormatter);
             setComposingEnabled(true);
-            setRawInputType(initialInputType);
+            if (restoreInputType) {
+                setRawInputType(initialInputType);
+            }
         }
     }
 
@@ -197,7 +199,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
         if (!maskedFormatterAttached) {
             safeSetText(text);
         } else {
-            detachMaskedFormatter();
+            detachMaskedFormatter(false);
             safeSetText(maskedFormatter.getFormattedValue(text));
             attachMaskedFormatter();
         }
@@ -229,7 +231,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     }
 
     public void dispatchOnBeforeRestoreInstanceState(Parcelable state) {
-        detachMaskedFormatter();
+        detachMaskedFormatter(false);
     }
 
     public void dispatchOnAfterRestoreInstanceState(Parcelable state) {
@@ -273,7 +275,9 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     }
 
     private void setRawInputType(int inputType) {
-        editText.setRawInputType(inputType);
+        if (editText.getInputType() != inputType) {
+            editText.setRawInputType(inputType);
+        }
     }
 
 }
