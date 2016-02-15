@@ -41,7 +41,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
     private void init(AttributeSet attrs) {
         editText.setImeOptions(editText.getImeOptions() | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         initialInputType = editText.getInputType();
-        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         maskCharsMap = new MaskCharsMap(
                 new NumericChar(getContext()),
                 new TextChar(getContext()));
@@ -130,7 +130,7 @@ public class MaskedEditTextDelegate implements MaskedInputView {
             detachMaskedFormatter();
             maskedFormatter = new MaskedInputFormatterTextWatcher(maskCharsMap, placeholder);
             maskedFormatter.setMask(mask);
-            setRawInputType(maskedFormatter.getInputType());
+            setRawInputType(maskedFormatter.getInputType() | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             safeSetText(maskedFormatter.getFormattedMask());
             if (!TextUtils.isEmpty(oldVal)) {
                 safeSetText(maskedFormatter.getFormattedValue(oldVal));
