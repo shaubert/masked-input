@@ -246,7 +246,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
             editable.removeSpan(inputGroup);
         }
         editable.replace(0, editable.length(), newText, 0, newText.length());
-        Selection.setSelection(editable, newSelectionStart);
+        Selection.setSelection(editable, Math.max(0, Math.min(editable.length(), newSelectionStart)));
         selfChange = false;
     }
 
