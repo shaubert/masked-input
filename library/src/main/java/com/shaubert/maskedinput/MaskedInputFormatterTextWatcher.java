@@ -3,6 +3,9 @@ package com.shaubert.maskedinput;
 import android.text.*;
 import android.view.inputmethod.EditorInfo;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class MaskedInputFormatterTextWatcher implements TextWatcher {
 
     public static final String TAG = MaskedInputFormatterTextWatcher.class.getSimpleName();
@@ -269,7 +272,7 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
     private String getUnmaskedValueAfterInput(Editable editable) {
         String text = editable.toString();
         StringBuilder result = new StringBuilder();
-        InputGroup[] inputGroups = editable.getSpans(0, editable.length(), InputGroup.class);
+        InputGroup[] inputGroups = getSortedSpans(editable, 0, editable.length(), InputGroup.class);
         boolean newCharsWasHandled = false;
         String charsFromLastGroup = null;
         int lastGroupEnd = -1;
@@ -338,6 +341,19 @@ public class MaskedInputFormatterTextWatcher implements TextWatcher {
             result.append(groupText);
         }
         return result.toString();
+    }
+
+    private  <T> T[] getSortedSpans(final Spanned spanned, int start, int end, Class<T> type) {
+        T[] spans = spanned.getSpans(start, end, type);
+        Arrays.sort(spans, new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                int o1Start = spanned.getSpanStart(o1);
+                int o2Start = spanned.getSpanStart(o2);
+                return o1Start - o2Start;
+            }
+        });
+        return spans;
     }
 
     private void replaceTextAccordingToMask(StringBuilder groupText, int start, int end, String replacement, InputGroup group) {
