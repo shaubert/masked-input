@@ -76,8 +76,8 @@ Also you could change the default mask character replacement (`'_'`) with
 `MaskedEditText.setMaskCharReplacement()` method. But remember, user is unable to input replacement char.
 
 List of supported xml attributes:
-* `mi_mask`, format="string|reference" — mask (for example "####-####-####-####")
-* `mi_placeholder`, format="string|reference" — placeholder (for example "X")
+* `mi_mask`, format="string|reference" ï¿½ mask (for example "####-####-####-####")
+* `mi_placeholder`, format="string|reference" ï¿½ placeholder (for example "X")
 
 How to add to your project
 --------------------------
@@ -88,5 +88,5 @@ Add dependency to your pom file:
         maven{url "https://github.com/shaubert/maven-repo/raw/master/releases"}
     }
     dependencies {
-        compile 'com.shaubert.maskedinput:library:1.2.9'
+        compile 'com.shaubert.maskedinput:library:1.3'
     }

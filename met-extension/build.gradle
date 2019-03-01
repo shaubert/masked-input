@@ -1,17 +1,17 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile project(':library')
+    api 'com.rengwuxian.materialedittext:library:2.1.4'
+    api project(':library')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 25
+        minSdkVersion 14
+        targetSdkVersion 28
     }
 }
 
